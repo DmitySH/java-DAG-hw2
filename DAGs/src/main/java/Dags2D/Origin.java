@@ -1,25 +1,26 @@
 package Dags2D;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public final class Origin extends Point {
-    HashSet<Point> children;
+    Set<Point> children;
 
     public Origin(Coord2D position) {
         super(position);
         children = new HashSet<>();
     }
 
-    public Origin(Coord2D position, HashSet<Point> children) {
+    public Origin(Coord2D position, Set<Point> children) {
         super(position);
         this.children = children;
     }
 
-    public HashSet<Point> getChildren() {
+    public Set<Point> getChildren() {
         return children;
     }
 
-    public void setChildren(HashSet<Point> newValue) {
+    public void setChildren(Set<Point> newValue) {
         children = newValue;
     }
 }
