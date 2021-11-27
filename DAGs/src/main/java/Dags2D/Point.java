@@ -1,8 +1,10 @@
 package Dags2D;
 
+import java.util.Objects;
+
 public class Point {
-    private Coord2D position;
-    private BoundBox bounds;
+    protected Coord2D position;
+    protected BoundBox bounds;
 
     public Point(Coord2D position) {
         this.position = position;
@@ -19,5 +21,22 @@ public class Point {
 
     public BoundBox getBounds() {
         return bounds;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Point point = (Point) other;
+        return Objects.equals(point.getPosition(), this.getPosition());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position);
     }
 }

@@ -1,25 +1,13 @@
 package Dags2D;
 
 public final class Space {
-    private static Space instance;
+    private final Origin root;
 
-    Origin root;
-
-    private Space(Origin origin) {
+    public Space(Origin origin) {
         root = origin;
     }
 
-    /**
-     * Creates instance of singleton.
-     *
-     * @param origin origin.
-     * @return instance of Space.
-     */
-    public static Space getInstance(Origin origin) {
-        if (instance == null) {
-            instance = new Space(origin);
-        }
-
-        return instance;
+    public Origin getRoot() {
+        return root;
     }
 }
