@@ -1,5 +1,7 @@
 package Dags2D;
 
+import Dags2D.exceptions.DAGConstraintException;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,8 +23,9 @@ public final class Origin extends Point {
         return children;
     }
 
-    public void setChildren(Set<Point> newValue) {
+    public void setChildren(Set<Point> newValue) throws DAGConstraintException {
         children = newValue;
+        findCycle(this);
     }
 
     @Override
@@ -43,6 +46,6 @@ public final class Origin extends Point {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), children);
+        return Objects.hash(super.hashCode());
     }
 }
