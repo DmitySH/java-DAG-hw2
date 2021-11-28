@@ -16,7 +16,6 @@ class Coord2DTest {
         assertNotEquals(null, new Coord2D(3.12, 5));
         Coord2D coord = new Coord2D(6, 1.123);
         assertEquals(coord, coord);
-
     }
 
 }
