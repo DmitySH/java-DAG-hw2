@@ -1,10 +1,15 @@
 package Dags2D;
 
+import Dags2D.exceptions.DAGConstraintException;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Point {
     protected Coord2D position;
     protected BoundBox bounds;
+    private static Map<Point, Boolean> colors;
 
     public Point(Coord2D position) {
         this.position = position;
@@ -22,6 +27,29 @@ public class Point {
     public BoundBox getBounds() {
         return bounds;
     }
+
+    protected void findCycle(Point startPoint) throws DAGConstraintException {
+        Point.colors = new HashMap<>();
+        dfs(startPoint);
+        Point.colors = null;
+    }
+
+    private void dfs(Point vertex) throws DAGConstraintException { //true = inside
+        Point.colors.put(vertex, true);
+        if (vertex instanceof Origin originVertex) {
+            for (Point point : originVertex.getChildren()
+            ) {
+                if (!colors.containsKey(point)) {
+                    dfs(point);
+                }
+                if (colors.get(point)) {
+                    throw new DAGConstraintException();
+                }
+            }
+        }
+        colors.put(vertex, false);
+    }
+
 
     @Override
     public boolean equals(Object other) {
