@@ -10,4 +10,6 @@ public final class Space {
     public Origin getRoot() {
         return root;
     }
+
+    //todo: getWorldBounds
 }

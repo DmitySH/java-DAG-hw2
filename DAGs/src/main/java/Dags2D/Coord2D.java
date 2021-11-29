@@ -27,9 +27,4 @@ public final class Coord2D {
     public int hashCode() {
         return Objects.hash(x, y);
     }
-
-    @Override
-    public String toString() {
-        return String.format("(%f; %f)", x, y);
-    }
 }

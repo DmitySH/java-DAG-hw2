@@ -20,7 +20,7 @@ public final class Origin extends Point {
     }
 
     public Set<Point> getChildren() {
-        return children;
+        return children; //todo: deep copy
     }
 
     public void setChildren(Set<Point> newValue) throws DAGConstraintException {

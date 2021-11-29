@@ -9,7 +9,8 @@ import java.util.Objects;
 public class Point {
     protected Coord2D position;
     protected BoundBox bounds;
-    private static Map<Point, Boolean> colors;
+
+    private static final Map<Point, Boolean> colors = new HashMap<>();
 
     public Point(Coord2D position) {
         this.position = position;
@@ -29,9 +30,8 @@ public class Point {
     }
 
     protected void findCycle(Point startPoint) throws DAGConstraintException {
-        Point.colors = new HashMap<>();
         dfs(startPoint);
-        Point.colors = null;
+        Point.colors.clear();
     }
 
     private void dfs(Point vertex) throws DAGConstraintException { //true = inside
@@ -49,7 +49,6 @@ public class Point {
         }
         colors.put(vertex, false);
     }
-
 
     @Override
     public boolean equals(Object other) {

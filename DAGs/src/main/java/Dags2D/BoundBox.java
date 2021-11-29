@@ -1,16 +1,16 @@
 package Dags2D;
 
 final class BoundBox {
-    Coord2D leftUpperPoint;
-    Coord2D rightLowerPoint;
+    Coord2D leftLowerPoint;
+    Coord2D rightUpperPoint;
 
     public BoundBox(Coord2D point) {
-        leftUpperPoint = point;
-        rightLowerPoint = point;
+        leftLowerPoint = point;
+        rightUpperPoint = point;
     }
 
-    public BoundBox(Coord2D leftUpperPoint, Coord2D rightLowerPoint) {
-        this.leftUpperPoint = leftUpperPoint;
-        this.rightLowerPoint = rightLowerPoint;
+    public BoundBox(Coord2D leftLowerPoint, Coord2D rightUpperPoint) {
+        this.leftLowerPoint = leftLowerPoint;
+        this.rightUpperPoint = rightUpperPoint;
     }
 }
