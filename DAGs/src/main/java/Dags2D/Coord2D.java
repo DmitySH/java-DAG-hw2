@@ -11,6 +11,18 @@ public final class Coord2D {
         this.y = y;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public Coord2D offset(double x, double y) {
+        return new Coord2D(this.x + x, this.y + y);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -26,5 +38,41 @@ public final class Coord2D {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    public static Coord2D makeCopy(Coord2D copiable) {
+        return new Coord2D(copiable.x, copiable.y);
+    }
+
+    public static Coord2D coordLeftLower(Coord2D first, Coord2D second) {
+        if (first.x < second.x && first.y < second.y) {
+            return first;
+        } else if (first.x < second.x && second.y < first.y) {
+            return new Coord2D(first.x, second.y);
+        } else if (second.x < first.x && first.y < second.y) {
+            return new Coord2D(second.x, first.y);
+        } else {
+            return second;
+        }
+    }
+
+    public static Coord2D coordRightUpper(Coord2D first, Coord2D second) {
+        if (second.x < first.x && second.y < first.y) {
+            return first;
+        } else if (second.x < first.x && first.y < second.y) {
+            return new Coord2D(first.x, second.y);
+        } else if (first.x < second.x && second.y < first.y) {
+            return new Coord2D(second.x, first.y);
+        } else {
+            return second;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

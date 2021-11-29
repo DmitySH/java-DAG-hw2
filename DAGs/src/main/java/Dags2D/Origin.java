@@ -2,11 +2,10 @@ package Dags2D;
 
 import Dags2D.exceptions.DAGConstraintException;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
-public final class Origin extends Point {
+public final class Origin extends Point implements Iterable<Point> {
     private Set<Point> children;
 
     public Origin(Coord2D position) {
@@ -47,5 +46,10 @@ public final class Origin extends Point {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode());
+    }
+
+    @Override
+    public Iterator<Point> iterator() {
+        return getChildren().iterator();
     }
 }
