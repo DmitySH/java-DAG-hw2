@@ -48,8 +48,8 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
         }
 
         return new BoundBox(
-                current_bounds.getLeftLowerPoint().offset(position.getX(), position.getY()),
-                current_bounds.getRightUpperPoint().offset(position.getX(), position.getY()));
+                current_bounds.getLeftLowerCoords().offset(position.getX(), position.getY()),
+                current_bounds.getRightUpperCoords().offset(position.getX(), position.getY()));
     }
 
     private BoundBox findChildBounds(List<BoundBox> bounds) {
@@ -62,9 +62,9 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
         for (int i = 1; i < bounds.size(); ++i) {
             current_bounds = new BoundBox(
                     Coord2D.coordLeftLower(
-                            current_bounds.getLeftLowerPoint(), bounds.get(i).getLeftLowerPoint()),
+                            current_bounds.getLeftLowerCoords(), bounds.get(i).getLeftLowerCoords()),
                     Coord2D.coordRightUpper(
-                            current_bounds.getRightUpperPoint(), bounds.get(i).getRightUpperPoint())
+                            current_bounds.getRightUpperCoords(), bounds.get(i).getRightUpperCoords())
             );
         }
 
@@ -80,8 +80,8 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
         }
 
         return new BoundBox(
-                boundsWithCurrentOffset.getLeftLowerPoint().offset(-position.getX(), -position.getY()),
-                boundsWithCurrentOffset.getRightUpperPoint().offset(-position.getX(), -position.getY()));
+                boundsWithCurrentOffset.getLeftLowerCoords().offset(-position.getX(), -position.getY()),
+                boundsWithCurrentOffset.getRightUpperCoords().offset(-position.getX(), -position.getY()));
     }
 
     @Override
