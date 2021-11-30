@@ -1,5 +1,7 @@
 package Dags2D;
 
+import java.util.Objects;
+
 public final class BoundBox {
     private final Coord2D leftLowerPoint;
     private final Coord2D rightUpperPoint;
@@ -28,5 +30,23 @@ public final class BoundBox {
                 "leftLowerPoint=" + leftLowerPoint +
                 ", rightUpperPoint=" + rightUpperPoint +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        BoundBox boundBox = (BoundBox) other;
+        return Objects.equals(leftLowerPoint, boundBox.leftLowerPoint) &&
+                Objects.equals(rightUpperPoint, boundBox.rightUpperPoint);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(leftLowerPoint, rightUpperPoint);
     }
 }
