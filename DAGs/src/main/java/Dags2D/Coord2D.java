@@ -1,8 +1,11 @@
 package Dags2D;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public final class Coord2D {
+public final class Coord2D implements Serializable {
+    private static final double COMPARE_EPSILON = 0.000001d;
+
     private final double x;
     private final double y;
 
@@ -31,8 +34,9 @@ public final class Coord2D {
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
+
         Coord2D otherCoord2D = (Coord2D) other;
-        return Double.compare(otherCoord2D.x, x) == 0 && Double.compare(otherCoord2D.y, y) == 0;
+        return Math.abs(otherCoord2D.x - x) < COMPARE_EPSILON && Math.abs(otherCoord2D.y - y) < COMPARE_EPSILON;
     }
 
     @Override
