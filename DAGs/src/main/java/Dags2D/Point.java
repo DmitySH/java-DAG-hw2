@@ -3,15 +3,20 @@ package Dags2D;
 import Dags2D.exceptions.DAGConstraintException;
 import Dags2D.exceptions.EmptyBoundsException;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Point {
-    protected Coord2D position;
-    protected BoundBox bounds;
+public class Point implements Serializable {
+    private static final Map<Point, Boolean> Colors = new HashMap<>();
 
-    private static final Map<Point, Boolean> colors = new HashMap<>();
+    protected Coord2D position;
+    private BoundBox bounds;
 
     public Point(Coord2D position) {
+        if (position == null) {
+            throw new IllegalArgumentException("Position can not be null");
+        }
+
         this.position = position;
         bounds = new BoundBox(position);
     }
@@ -35,23 +40,24 @@ public class Point {
 
     protected void findCycle(Point startPoint) throws DAGConstraintException {
         dfs(startPoint);
-        Point.colors.clear();
+        Point.Colors.clear();
     }
 
-    private void dfs(Point vertex) throws DAGConstraintException { //true = inside
-        Point.colors.put(vertex, true);
+    private void dfs(Point vertex) throws DAGConstraintException {
+        Point.Colors.put(vertex, true);
+
         if (vertex instanceof Origin originVertex) {
-            for (Point point : originVertex.getChildren()
-            ) {
-                if (!colors.containsKey(point)) {
+            for (Point point : originVertex.getChildren()) {
+                if (!Colors.containsKey(point)) {
                     dfs(point);
                 }
-                if (colors.get(point)) {
+                if (Colors.get(point)) {
                     throw new DAGConstraintException();
                 }
             }
         }
-        colors.put(vertex, false);
+
+        Colors.put(vertex, false);
     }
 
     @Override
@@ -62,6 +68,7 @@ public class Point {
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
+
         Point point = (Point) other;
         return Objects.equals(point.getPosition(), this.getPosition());
     }
