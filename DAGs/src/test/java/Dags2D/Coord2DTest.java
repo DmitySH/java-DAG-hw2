@@ -1,6 +1,5 @@
 package Dags2D;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,4 +17,19 @@ class Coord2DTest {
         assertEquals(coord, coord);
     }
 
+    @Test
+    void coordLeftLowerTest() {
+        Coord2D first = new Coord2D(1, 3);
+        Coord2D second = new Coord2D(2, 2);
+
+        assertEquals(Coord2D.coordLeftLower(first, second), new Coord2D(1, 2));
+    }
+
+    @Test
+    void coordRightUpperTest() {
+        Coord2D first = new Coord2D(1, 3);
+        Coord2D second = new Coord2D(2, 2);
+
+        assertEquals(Coord2D.coordRightUpper(first, second), new Coord2D(2, 3));
+    }
 }
