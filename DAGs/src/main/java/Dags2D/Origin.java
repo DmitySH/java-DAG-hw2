@@ -3,9 +3,10 @@ package Dags2D;
 import Dags2D.exceptions.DAGConstraintException;
 import Dags2D.exceptions.EmptyBoundsException;
 
+import java.io.Serializable;
 import java.util.*;
 
-public final class Origin extends Point implements Iterable<Point> {
+public final class Origin extends Point implements Iterable<Point>, Serializable {
     private Set<Point> children;
 
     public Origin(Coord2D position) {
@@ -15,23 +16,27 @@ public final class Origin extends Point implements Iterable<Point> {
 
     public Origin(Coord2D position, Set<Point> children) {
         super(position);
-        this.children = children;
+
+        if (children != null) {
+            this.children = new HashSet<>(children);
+        } else {
+            this.children = new HashSet<>();
+        }
     }
 
     public Set<Point> getChildren() {
-        return children; //todo: deep copy
+        return Collections.unmodifiableSet(children);
     }
 
     public void setChildren(Set<Point> newValue) throws DAGConstraintException {
-        children = newValue;
+        children = new HashSet<>(newValue);
         findCycle(this);
     }
 
     @Override
     protected BoundBox findBoundBox() {
         List<BoundBox> childrenBounds = new ArrayList<>();
-        for (Point child :
-                this) {
+        for (Point child : this) {
             if (child != null) {
                 childrenBounds.add(child.findBoundBox());
             }
@@ -45,17 +50,6 @@ public final class Origin extends Point implements Iterable<Point> {
         return new BoundBox(
                 current_bounds.getLeftLowerPoint().offset(position.getX(), position.getY()),
                 current_bounds.getRightUpperPoint().offset(position.getX(), position.getY()));
-    }
-
-    @Override
-    public BoundBox getBounds() throws EmptyBoundsException {
-        BoundBox boundsWithCurrentOffset = findBoundBox();
-        if (boundsWithCurrentOffset == null) {
-            throw new EmptyBoundsException(this);
-        }
-        return new BoundBox(
-                boundsWithCurrentOffset.getLeftLowerPoint().offset(-position.getX(), -position.getY()),
-                boundsWithCurrentOffset.getRightUpperPoint().offset(-position.getX(), -position.getY()));
     }
 
     private BoundBox findChildBounds(List<BoundBox> bounds) {
@@ -75,6 +69,19 @@ public final class Origin extends Point implements Iterable<Point> {
         }
 
         return current_bounds;
+    }
+
+    @Override
+    public BoundBox getBounds() throws EmptyBoundsException {
+        BoundBox boundsWithCurrentOffset = findBoundBox();
+
+        if (boundsWithCurrentOffset == null) {
+            throw new EmptyBoundsException(this);
+        }
+
+        return new BoundBox(
+                boundsWithCurrentOffset.getLeftLowerPoint().offset(-position.getX(), -position.getY()),
+                boundsWithCurrentOffset.getRightUpperPoint().offset(-position.getX(), -position.getY()));
     }
 
     @Override
