@@ -1,31 +1,65 @@
 package Dags2D;
 
+import Dags2D.interfaces.DAGSerializable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public final class Coord2D implements Serializable {
+/**
+ * Simple coordinates.
+ */
+public final class Coord2D implements Serializable, DAGSerializable {
     private static final double COMPARE_EPSILON = 0.000001d;
 
     private final double x;
     private final double y;
 
+    /**
+     * Coords constructor.
+     *
+     * @param x x coordinate.
+     * @param y y coordinate.
+     */
     public Coord2D(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * X getter.
+     *
+     * @return x coordinate.
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Y getter.
+     *
+     * @return y coordinate.
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * Offsets coord.
+     *
+     * @param x x-offset.
+     * @param y y-offset.
+     * @return new ofsetted coord.
+     */
     public Coord2D offset(double x, double y) {
         return new Coord2D(this.x + x, this.y + y);
     }
 
+    /**
+     * Equals for coords.
+     *
+     * @param other other object.
+     * @return true if coords have same location.
+     */
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -39,15 +73,33 @@ public final class Coord2D implements Serializable {
         return Math.abs(otherCoord2D.x - x) < COMPARE_EPSILON && Math.abs(otherCoord2D.y - y) < COMPARE_EPSILON;
     }
 
+    /**
+     * Coord hashcode.
+     *
+     * @return hashcode.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
     }
 
+    /**
+     * Copies coord.
+     *
+     * @param copiable coord to copy.
+     * @return copy of coord.
+     */
     public static Coord2D makeCopy(Coord2D copiable) {
         return new Coord2D(copiable.x, copiable.y);
     }
 
+    /**
+     * Finds lower and left coordinates from two cords.
+     *
+     * @param first  first coord.
+     * @param second second coord.
+     * @return left-lower new coord.
+     */
     public static Coord2D coordLeftLower(Coord2D first, Coord2D second) {
         if (first.x < second.x && first.y < second.y) {
             return first;
@@ -60,6 +112,13 @@ public final class Coord2D implements Serializable {
         }
     }
 
+    /**
+     * Finds upper and right coordinates from two cords.
+     *
+     * @param first  first coord.
+     * @param second second coord.
+     * @return right-upper new coord.
+     */
     public static Coord2D coordRightUpper(Coord2D first, Coord2D second) {
         if (second.x < first.x && second.y < first.y) {
             return first;
@@ -72,11 +131,41 @@ public final class Coord2D implements Serializable {
         }
     }
 
+    /**
+     * String view of coord.
+     *
+     * @return string view.
+     */
     @Override
     public String toString() {
         return "{" +
                 "x=" + x +
-                ", y=" + y +
+                ",y=" + y +
                 '}';
+    }
+
+    /**
+     * Serialize-view for coord.
+     *
+     * @return string for deserializer.
+     */
+    @Override
+    public String stringRepresent() {
+        return "Coord2D" + this;
+    }
+
+    /**
+     * Deserializes from string.
+     *
+     * @param stringRepresent serialized object.
+     * @return deserialized coord.
+     */
+    @Override
+    public Coord2D createFromStringRepresent(String stringRepresent) {
+        String x = stringRepresent.substring(stringRepresent.indexOf('=') + 1, stringRepresent.indexOf(','));
+        System.out.println(x);
+        String y = stringRepresent.substring(stringRepresent.indexOf(' ') + 3, stringRepresent.indexOf('}'));
+        System.out.println(y);
+        return null;
     }
 }
