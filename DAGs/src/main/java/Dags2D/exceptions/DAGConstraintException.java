@@ -12,9 +12,9 @@ public class DAGConstraintException extends Exception {
         this(null);
     }
 
-    public DAGConstraintException(Point emptyOrigin) {
+    public DAGConstraintException(Point cycling) {
         super();
-        this.cycling = emptyOrigin;
+        this.cycling = cycling;
     }
 
     @Override
@@ -23,6 +23,6 @@ public class DAGConstraintException extends Exception {
             return "DAG has cycles";
         }
 
-        return "Origin " + cycling + " has cycles";
+        return "Origin on" + cycling.getPosition() + " has cycles";
     }
 }
