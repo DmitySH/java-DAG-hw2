@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public final class Origin extends Point implements Iterable<Point>, Serializable {
-    private Set<Point> children;
+    private HashSet<Point> children;
 
     public Origin(Coord2D position) {
         super(position);
@@ -30,6 +30,7 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
 
     public void setChildren(Set<Point> newValue) throws DAGConstraintException {
         children = new HashSet<>(newValue);
+        children.remove(null);
         findCycle(this);
     }
 

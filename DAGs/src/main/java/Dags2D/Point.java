@@ -4,7 +4,9 @@ import Dags2D.exceptions.DAGConstraintException;
 import Dags2D.exceptions.EmptyBoundsException;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class Point implements Serializable {
     private static final Map<Point, Boolean> Colors = new HashMap<>();
@@ -52,7 +54,7 @@ public class Point implements Serializable {
                     dfs(point);
                 }
                 if (Colors.get(point)) {
-                    throw new DAGConstraintException();
+                    throw new DAGConstraintException(point);
                 }
             }
         }
