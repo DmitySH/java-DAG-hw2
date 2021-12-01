@@ -1,5 +1,6 @@
-package Dags2D;
+package Dags2D.areas;
 
+import Dags2D.entities.Coord2D;
 import Dags2D.interfaces.DAGSerializable;
 
 import java.io.Serializable;

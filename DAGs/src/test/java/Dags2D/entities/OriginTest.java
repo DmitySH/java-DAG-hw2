@@ -1,5 +1,7 @@
-package Dags2D;
+package Dags2D.entities;
 
+import Dags2D.areas.BoundBox;
+import Dags2D.areas.Space;
 import Dags2D.exceptions.DAGConstraintException;
 import Dags2D.exceptions.EmptyBoundsException;
 import org.junit.jupiter.api.BeforeEach;

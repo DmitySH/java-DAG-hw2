@@ -1,5 +1,6 @@
-package Dags2D;
+package Dags2D.entities;
 
+import Dags2D.areas.BoundBox;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

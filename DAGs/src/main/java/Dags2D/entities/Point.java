@@ -1,5 +1,6 @@
-package Dags2D;
+package Dags2D.entities;
 
+import Dags2D.areas.BoundBox;
 import Dags2D.exceptions.DAGConstraintException;
 import Dags2D.exceptions.EmptyBoundsException;
 import Dags2D.interfaces.DAGSerializable;

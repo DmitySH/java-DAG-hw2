@@ -1,4 +1,4 @@
-package Dags2D;
+package Dags2D.entities;
 
 import Dags2D.interfaces.DAGSerializable;
 

@@ -1,6 +1,10 @@
 package Dags2D.utils;
 
-import Dags2D.*;
+import Dags2D.areas.BoundBox;
+import Dags2D.areas.Space;
+import Dags2D.entities.Coord2D;
+import Dags2D.entities.Origin;
+import Dags2D.entities.Point;
 import Dags2D.exceptions.DAGConstraintException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

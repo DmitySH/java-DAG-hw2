@@ -1,6 +1,6 @@
 package Dags2D.exceptions;
 
-import Dags2D.Origin;
+import Dags2D.entities.Origin;
 
 /**
  * Exception to be thrown if origin does not contain any physical points.

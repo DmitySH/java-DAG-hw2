@@ -1,6 +1,6 @@
 package Dags2D.utils;
 
-import Dags2D.Space;
+import Dags2D.areas.Space;
 
 import java.io.*;
 import java.util.Base64;
