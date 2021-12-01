@@ -6,6 +6,8 @@ import Dags2D.interfaces.DAGSerializable;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Origin with position and other origins and points.
@@ -34,6 +36,12 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
 
         if (children != null) {
             this.children = new HashSet<>(children);
+            this.children.remove(null);
+            try {
+                findCycle(this);
+            } catch (DAGConstraintException ex) {
+                this.children = new HashSet<>();
+            }
         } else {
             this.children = new HashSet<>();
         }
@@ -55,9 +63,16 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
      * @throws DAGConstraintException if it has cycles.
      */
     public void setChildren(Set<Point> newValue) throws DAGConstraintException {
-        children = new HashSet<>(newValue);
-        children.remove(null);
-        findCycle(this);
+        HashSet<Point> prevChildren = children;
+
+        try {
+            children = new HashSet<>(newValue);
+            children.remove(null);
+            findCycle(this);
+        } catch (DAGConstraintException ex) {
+            children = prevChildren;
+            throw ex;
+        }
     }
 
     /**
@@ -190,9 +205,64 @@ public final class Origin extends Point implements Iterable<Point>, Serializable
      */
     @Override
     public String stringRepresent() {
+
         return "Origin{" +
-                "children=" + children +
+                "children=" + childrenRepresentation() +
                 ", position=" + position.stringRepresent() +
                 '}';
+    }
+
+    private String childrenRepresentation() {
+        Iterator<Point> it = children.iterator();
+        if (!it.hasNext())
+            return "[]";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        for (; ; ) {
+            DAGSerializable e = it.next();
+            sb.append(e == this ? "(this Collection)" : e.stringRepresent());
+            if (!it.hasNext())
+                return sb.append(']').toString();
+            sb.append(',').append(' ');
+        }
+    }
+
+    /**
+     * Deserializes from string.
+     *
+     * @param stringRepresent serialized object.
+     * @return deserialized origin.
+     */
+    public static DAGSerializable createFromStringRepresent(String stringRepresent) {
+        String set = stringRepresent.substring(stringRepresent.indexOf('[') + 1, stringRepresent.lastIndexOf(']'));
+        HashSet<Point> children = getChildrenFromString(set);
+
+        stringRepresent = stringRepresent.substring(stringRepresent.lastIndexOf(']'));
+        Pattern pattern = Pattern.compile("Coord2D\\{.*?}");
+        Matcher matcher = pattern.matcher(stringRepresent);
+        matcher.find();
+        Coord2D coords = (Coord2D) Coord2D.createFromStringRepresent(matcher.group());
+
+        return new Origin(coords, children);
+    }
+
+    private static HashSet<Point> getChildrenFromString(String childString) {
+        Pattern pattern = Pattern.compile("Origin\\{.*?}");
+        Matcher matcher = pattern.matcher(childString);
+
+        HashSet<Point> children = new HashSet<>();
+
+        while (matcher.find()) {
+            children.add((Origin) Origin.createFromStringRepresent(childString.substring(matcher.start(), matcher.end())));
+        }
+
+        pattern = Pattern.compile("Point\\{.*?}");
+        matcher = pattern.matcher(childString);
+        while (matcher.find()) {
+            children.add((Point) Point.createFromStringRepresent(childString.substring(matcher.start(), matcher.end())));
+        }
+
+        return children;
     }
 }

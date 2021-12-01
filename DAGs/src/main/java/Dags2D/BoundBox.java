@@ -3,6 +3,7 @@ package Dags2D;
 import Dags2D.interfaces.DAGSerializable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +16,7 @@ public final class BoundBox implements Serializable, DAGSerializable {
     private final Coord2D rightUpperCoords;
 
     /**
-     * Construction of point's bounds.
+     * Construction of point's coords.
      *
      * @param point one coords.
      */
@@ -115,15 +116,15 @@ public final class BoundBox implements Serializable, DAGSerializable {
      * @param stringRepresent serialized object.
      * @return deserialized point.
      */
-    @Override
-    public DAGSerializable createFromStringRepresent(String stringRepresent) {
-        stringRepresent = "{leftLowerPoint=Coord2D{x=-31.2342340, y=1.0}, rightUpperPoint=Coord2D{x=2.0, y=2.0}}";
-        stringRepresent = stringRepresent.substring(16, stringRepresent.length() - 1);
-        String first = stringRepresent.substring(stringRepresent.indexOf('=') + 1, stringRepresent.indexOf(','));
-        stringRepresent = stringRepresent.substring(stringRepresent.indexOf(','), stringRepresent.length() - 1);
-        String second = stringRepresent.substring(stringRepresent.indexOf('=') + 1, stringRepresent.indexOf(','));
+    public static DAGSerializable createFromStringRepresent(String stringRepresent) {
+        Pattern pattern = Pattern.compile("Coord2D\\{.*?}");
+        Matcher matcher = pattern.matcher(stringRepresent);
+        ArrayList<Coord2D> coords = new ArrayList<>();
 
-        System.out.println(first);
-        return null;
+        while (matcher.find()) {
+            coords.add((Coord2D) Coord2D.createFromStringRepresent(stringRepresent.substring(matcher.start(), matcher.end())));
+        }
+
+        return new BoundBox(coords.get(0), coords.get(1));
     }
 }

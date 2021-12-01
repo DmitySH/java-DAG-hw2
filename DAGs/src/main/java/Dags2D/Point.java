@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple physical point.
@@ -161,8 +163,11 @@ public class Point implements Serializable, DAGSerializable {
      * @param stringRepresent serialized object.
      * @return deserialized point.
      */
-//    @Override
-//    public DAGSerializable createFromStringRepresent(String stringRepresent) {
-//
-//    }
+    public static DAGSerializable createFromStringRepresent(String stringRepresent) {
+        Pattern pattern = Pattern.compile("Coord2D\\{.*?}");
+        Matcher matcher = pattern.matcher(stringRepresent);
+
+        matcher.find();
+        return new Point((Coord2D) Coord2D.createFromStringRepresent(matcher.group()));
+    }
 }

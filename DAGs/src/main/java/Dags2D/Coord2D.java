@@ -4,6 +4,8 @@ import Dags2D.interfaces.DAGSerializable;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple coordinates.
@@ -140,7 +142,7 @@ public final class Coord2D implements Serializable, DAGSerializable {
     public String toString() {
         return "{" +
                 "x=" + x +
-                ",y=" + y +
+                ", y=" + y +
                 '}';
     }
 
@@ -160,12 +162,19 @@ public final class Coord2D implements Serializable, DAGSerializable {
      * @param stringRepresent serialized object.
      * @return deserialized coord.
      */
-    @Override
-    public Coord2D createFromStringRepresent(String stringRepresent) {
-        String x = stringRepresent.substring(stringRepresent.indexOf('=') + 1, stringRepresent.indexOf(','));
-        System.out.println(x);
-        String y = stringRepresent.substring(stringRepresent.indexOf(' ') + 3, stringRepresent.indexOf('}'));
-        System.out.println(y);
-        return null;
+    public static DAGSerializable createFromStringRepresent(String stringRepresent) {
+        Pattern pattern = Pattern.compile("x=.*?,");
+        Matcher matcher = pattern.matcher(stringRepresent);
+        matcher.find();
+        String x = matcher.group();
+        x = x.substring(2, x.length() - 1);
+
+        pattern = Pattern.compile("y=.*?}");
+        matcher = pattern.matcher(stringRepresent);
+        matcher.find();
+        String y = matcher.group();
+        y = y.substring(2, y.length() - 1);
+
+        return new Coord2D(Double.parseDouble(x), Double.parseDouble(y));
     }
 }

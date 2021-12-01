@@ -5,6 +5,8 @@ import Dags2D.interfaces.DAGSerializable;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * World's origin.
@@ -100,5 +102,15 @@ public final class Space implements Serializable, DAGSerializable {
         return "Space{" +
                 "root=" + root.stringRepresent() +
                 '}';
+    }
+
+    public static DAGSerializable createFromStringRepresent(String stringRepresent) {
+        Pattern pattern = Pattern.compile("Origin\\{.*");
+        Matcher matcher = pattern.matcher(stringRepresent);
+
+        matcher.find();
+
+        String str = matcher.group();
+        return new Space((Origin) Origin.createFromStringRepresent(str.substring(0, str.length() - 1)));
     }
 }
