@@ -5,8 +5,7 @@ import Dags2D.exceptions.EmptyBoundsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +15,6 @@ class OriginTest {
     private HashSet<Point> children;
 
     private Space space;
-    private Point onePoint;
     private Origin firstSpaceChild;
     private Origin secondSpaceChild;
 
@@ -34,7 +32,7 @@ class OriginTest {
     @BeforeEach
     void initExample() {
         space = new Space(new Origin(new Coord2D(1, 1)));
-        onePoint = new Point(new Coord2D(-1, -1));
+        Point onePoint = new Point(new Coord2D(-1, -1));
         firstSpaceChild = new Origin(new Coord2D(-2, 1), new HashSet<>(List.of(new Point[]{onePoint})));
         secondSpaceChild = new Origin(new Coord2D(1, 0), new HashSet<>(List.of(new Point[]{onePoint})));
     }
@@ -48,10 +46,10 @@ class OriginTest {
 
     @Test
     void testEqualsDifferentLinksSameObjects() {
-        firstOrigin = new Origin(new Coord2D(1, 2), new HashSet<Point>(List.of(
-                new Point[]{new Origin(new Coord2D(3, 4), new HashSet<Point>(List.of(
+        firstOrigin = new Origin(new Coord2D(1, 2), new HashSet<>(List.of(
+                new Point[]{new Origin(new Coord2D(3, 4), new HashSet<>(List.of(
                         new Point[]{
-                                new Origin(new Coord2D(10, 10), new HashSet<Point>(List.of(
+                                new Origin(new Coord2D(10, 10), new HashSet<>(List.of(
                                         new Point[]{new Origin(new Coord2D(11, 10))}))),
                                 new Point(new Coord2D(5, 6)),
                                 new Point(new Coord2D(7, 8))
@@ -59,13 +57,13 @@ class OriginTest {
                 ))
                 )})));
 
-        secondOrigin = new Origin(new Coord2D(1, 2), new HashSet<Point>(List.of(
-                new Point[]{new Origin(new Coord2D(3, 4), new HashSet<Point>(List.of(
+        secondOrigin = new Origin(new Coord2D(1, 2), new HashSet<>(List.of(
+                new Point[]{new Origin(new Coord2D(3, 4), new HashSet<>(List.of(
                         new Point[]{
                                 new Point(new Coord2D(7, 8)),
                                 new Point(new Coord2D(5, 6)),
                                 new Point(new Coord2D(5, 6)),
-                                new Origin(new Coord2D(10, 10), new HashSet<Point>(List.of(
+                                new Origin(new Coord2D(10, 10), new HashSet<>(List.of(
                                         new Point[]{new Origin(new Coord2D(11, 10))})))
                         }
                 ))
@@ -157,5 +155,69 @@ class OriginTest {
                 () -> secondOrigin.getBounds()
         );
         System.out.println(thrown.getMessage());
+    }
+
+    @Test
+    void testSetChildrenByCopy() {
+        Origin origin = new Origin(new Coord2D(2, 3));
+        Set<Point> children = new HashSet<>();
+
+        children.add(new Origin(new Coord2D(4, 5)));
+        children.add(new Point(new Coord2D(6, 7)));
+        children.add(null);
+
+        assertDoesNotThrow(() -> origin.setChildren(children));
+        assertFalse(origin.getChildren().contains(null));
+
+        children.add(new Point(new Coord2D(2, 123)));
+        assertNotEquals(children, origin.getChildren());
+
+        children.remove(new Point(new Coord2D(6, 7)));
+        assertNotEquals(children, origin.getChildren());
+    }
+
+    @Test
+    void testGetChildren() {
+        Origin origin = new Origin(new Coord2D(2, 3));
+        Set<Point> children = new HashSet<>();
+
+        children.add(new Origin(new Coord2D(4, 5)));
+        children.add(new Point(new Coord2D(6, 7)));
+        assertDoesNotThrow(() -> origin.setChildren(children));
+
+        Set<Point> newChildren = origin.getChildren();
+        for (Point point : newChildren) {
+            point = new Point(new Coord2D(7, 7));
+        }
+
+        assertEquals(origin.getChildren(), children);
+
+        assertThrows(UnsupportedOperationException.class, () -> newChildren.add(new Point(new Coord2D(1, 123))));
+        assertThrows(UnsupportedOperationException.class, () -> newChildren.remove(new Point(new Coord2D(1, 123))));
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(firstOrigin.hashCode(), Objects.hash(Objects.hash(firstOrigin.getPosition().hashCode())));
+    }
+
+    @Test
+    void testIterator() {
+        ArrayList<Point> iteratorPoints = new ArrayList<>();
+
+        for (Point point : firstOrigin) {
+            iteratorPoints.add(point);
+        }
+
+        ArrayList<Point> childrenIteratorPoints = new ArrayList<>(firstOrigin.getChildren());
+
+        assertEquals(iteratorPoints, childrenIteratorPoints);
+    }
+
+    @Test
+    void testToString() {
+        assertEquals(firstOrigin.toString(), "Origin{children=[Point{position={x=1.0, y=33.0}}, " +
+                "Point{position={x=3.1, y=4.0}}]," +
+                " position={x=23.0, y=43.2}}");
     }
 }
