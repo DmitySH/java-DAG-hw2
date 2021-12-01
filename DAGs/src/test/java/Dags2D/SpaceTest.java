@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,7 +59,7 @@ class SpaceTest {
 
     @Test
     void testGetEmptyWorldBounds() {
-        HashSet<Point> children = new HashSet<Point>(
+        HashSet<Point> children = new HashSet<>(
                 List.of(new Origin[]{
                         new Origin(new Coord2D(2, 2)),
                         new Origin(new Coord2D(3, 3))
@@ -67,16 +68,26 @@ class SpaceTest {
 
         space = new Space(new Origin(new Coord2D(2, -1), children));
 
-
         Throwable thrown = assertThrows(
                 EmptyBoundsException.class,
                 () -> space.getWorldBounds()
         );
         System.out.println(thrown.getMessage());
+    }
 
-        children.add(new Point(new Coord2D(10, 12)));
+    @Test
+    void testToString() {
+        assertEquals(space.toString(), "Space{root=Origin{children=[], position={x=1.0, y=1.0}}}");
+    }
 
-        BoundBox bounds = assertDoesNotThrow(()->space.getWorldBounds());
-        assertEquals(bounds, new BoundBox(new Coord2D(12, 11), new Coord2D(12, 11)));
+    @Test
+    void testEquals() {
+        Space otherSpace = new Space(space.getRoot());
+        assertEquals(otherSpace, space);
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(space.hashCode(), Objects.hash(space.getRoot().getPosition()));
     }
 }
