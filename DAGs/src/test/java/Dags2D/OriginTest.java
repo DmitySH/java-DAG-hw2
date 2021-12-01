@@ -106,10 +106,11 @@ class OriginTest {
         assertDoesNotThrow(() -> firstOrigin.setChildren(new HashSet<>()));
         assertDoesNotThrow(() -> firstOrigin.setChildren(children));
 
-        assertThrows(
+        Throwable thrown = assertThrows(
                 DAGConstraintException.class,
                 () -> firstOrigin.setChildren(anotherChildren)
         );
+        System.out.println(thrown.getMessage());
     }
 
     @Test
@@ -125,10 +126,12 @@ class OriginTest {
         assertDoesNotThrow(() -> origin1.setChildren(new HashSet<>(List.of(origin2, origin3))));
         assertDoesNotThrow(() -> origin2.setChildren(new HashSet<>(List.of(origin4))));
         assertDoesNotThrow(() -> origin3.setChildren(new HashSet<>(List.of(origin4))));
-        assertThrows(
+        Throwable thrown = assertThrows(
                 DAGConstraintException.class,
                 () -> origin4.setChildren(new HashSet<>(List.of(new Point[]{point1, point2, origin3})))
         );
+
+        System.out.println(thrown.getMessage());
     }
 
     @Test
